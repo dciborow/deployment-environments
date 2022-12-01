@@ -11,15 +11,13 @@ from pathlib import Path
 repository_root = Path(__file__).resolve().parent.parent
 environments_path = repository_root / 'Environments'
 
-environments = []
-
 print('Building ARM templates from bicep files...')
-# walk the Environments directory and find all the child directories
-for dirpath, dirnames, files in os.walk(environments_path):
-    # os.walk includes the root directory (i.e. repo/Environments) so we need to skip it
-    if not environments_path.samefile(dirpath) and Path(dirpath).parent.samefile(environments_path):
-        environments.append(Path(dirpath))
-        # image_names.append(Path(dirpath).name)
+environments = [
+    Path(dirpath)
+    for dirpath, dirnames, files in os.walk(environments_path)
+    if not environments_path.samefile(dirpath)
+    and Path(dirpath).parent.samefile(environments_path)
+]
 
 # get the full path to the azure cli executable
 az = shutil.which('az')
